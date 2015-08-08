@@ -1,6 +1,9 @@
 package com.ppolivka.time
 
-import java.util.*
+import org.w3c.dom.Element
+import java.util.HashMap
+import kotlin.Pair
+import kotlin.browser.document
 
 public class TimeZone {
     var zones : Map<String, Int> = HashMap()

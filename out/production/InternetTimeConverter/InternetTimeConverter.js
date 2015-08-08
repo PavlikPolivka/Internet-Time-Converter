@@ -1,78 +1,160 @@
 (function (Kotlin) {
   'use strict';
   var _ = Kotlin.defineRootPackage(null, /** @lends _ */ {
-    main: function (args) {
-      var now = new _.com.ppolivka.time.Time(new Date(), jstz.determine());
-      _.com.ppolivka.browser.E.object.hour.value(now.hour.toString());
-      _.com.ppolivka.browser.E.object.minute.value(now.minute.toString());
-      _.com.ppolivka.browser.E.object.second.value(now.second.toString());
-      _.com.ppolivka.browser.E.object.beats.value(now.toBeats().toString());
-      _.com.ppolivka.browser.E.object.test.value('ne');
-    },
     com: Kotlin.definePackage(null, /** @lends _.com */ {
-      ppolivka: Kotlin.definePackage(null, /** @lends _.com.ppolivka */ {
+      ppolivka: Kotlin.definePackage(function () {
+        this.zone = jstz.determine().name();
+        this.dateTime = _.com.ppolivka.time.Time_cxhy00$(undefined, new Date(), _.com.ppolivka.zone);
+      }, /** @lends _.com.ppolivka */ {
+        main: function (args) {
+          _.com.ppolivka.render();
+          _.com.ppolivka.browser.Field.object.beats.change(_.com.ppolivka.beatsChange);
+          _.com.ppolivka.browser.Field.object.hour.change(_.com.ppolivka.timeChange);
+          _.com.ppolivka.browser.Field.object.minute.change(_.com.ppolivka.timeChange);
+          _.com.ppolivka.browser.Field.object.second.change(_.com.ppolivka.timeChange);
+        },
+        beatsChange: function (event) {
+          var tmp$0;
+          var beats = (tmp$0 = _.com.ppolivka.browser.Field.object.beats.value()) != null ? tmp$0 : '0';
+          _.com.ppolivka.dateTime = _.com.ppolivka.time.Time.object.timeFromBeats(beats, _.com.ppolivka.zone);
+          _.com.ppolivka.render();
+        },
+        timeChange: function (event) {
+          _.com.ppolivka.dateTime.hour = _.com.ppolivka.browser.Field.object.hour.intValue();
+          _.com.ppolivka.dateTime.minute = _.com.ppolivka.browser.Field.object.minute.intValue();
+          _.com.ppolivka.dateTime.second = _.com.ppolivka.browser.Field.object.second.intValue();
+          _.com.ppolivka.render();
+        },
+        render: function () {
+          _.com.ppolivka.browser.Field.object.hour.value_1(_.com.ppolivka.dateTime.hour.toString());
+          _.com.ppolivka.browser.Field.object.minute.value_1(_.com.ppolivka.dateTime.minute.toString());
+          _.com.ppolivka.browser.Field.object.second.value_1(_.com.ppolivka.dateTime.second.toString());
+          _.com.ppolivka.browser.Field.object.beats.value_1(_.com.ppolivka.dateTime.toBeats().toString());
+        },
         browser: Kotlin.definePackage(null, /** @lends _.com.ppolivka.browser */ {
-          E: Kotlin.createEnumClass(function () {
+          Field: Kotlin.createEnumClass(function () {
             return [Kotlin.Enum];
           }, function $fun(e) {
             $fun.baseInitializer.call(this);
             this.element = e;
           }, function () {
             return {
-              hour: new _.com.ppolivka.browser.E(document.getElementById('hour')),
-              minute: new _.com.ppolivka.browser.E(document.getElementById('minute')),
-              second: new _.com.ppolivka.browser.E(document.getElementById('second')),
-              beats: new _.com.ppolivka.browser.E(document.getElementById('beats')),
-              test: new _.com.ppolivka.browser.E(document.getElementById('test'))
+              hour: new _.com.ppolivka.browser.Field(document.getElementById('hour')),
+              minute: new _.com.ppolivka.browser.Field(document.getElementById('minute')),
+              second: new _.com.ppolivka.browser.Field(document.getElementById('second')),
+              beats: new _.com.ppolivka.browser.Field(document.getElementById('beats')),
+              test: new _.com.ppolivka.browser.Field(document.getElementById('test'))
             };
-          }, /** @lends _.com.ppolivka.browser.E.prototype */ {
-            value: function (value) {
-              var tmp$0, tmp$1;
-              (tmp$0 = this.element) != null ? tmp$0.setAttribute('value', value) : null;
-              (tmp$1 = this.element) != null ? (tmp$1.innerHTML = value) : null;
+          }, /** @lends _.com.ppolivka.browser.Field.prototype */ {
+            value: function () {
+              var tmp$0;
+              return (tmp$0 = this.element) != null ? tmp$0.value : null;
+            },
+            value_1: function (v) {
+              var tmp$0;
+              (tmp$0 = this.element) != null ? (tmp$0.value = v) : null;
+            },
+            intValue: function () {
+              var tmp$0;
+              return parseInt((tmp$0 = this.value()) != null ? tmp$0 : '0');
+            },
+            change: function (callback) {
+              var tmp$0;
+              (tmp$0 = this.element) != null ? tmp$0.addEventListener('keyup', callback) : null;
             }
           })
         }),
         time: Kotlin.definePackage(null, /** @lends _.com.ppolivka.time */ {
-          Time: Kotlin.createClass(null, function (now, zone) {
-            this.date = now;
-            this.year = this.date.getFullYear();
-            this.month = this.date.getMonth() + 1;
-            this.day = this.date.getDate();
-            this.hour = this.date.getHours();
-            this.minute = this.date.getMinutes();
-            this.second = this.date.getSeconds();
-            this.zone = zone;
+          Time: Kotlin.createClass(null, function () {
+            this.year = 1971;
+            this.month = 1;
+            this.day = 1;
+            this.hour = 0;
+            this.minute = 0;
+            this.second = 0;
+            this.zone = 'UTC';
           }, /** @lends _.com.ppolivka.time.Time.prototype */ {
-            fromDate_c8xjg6$: function (time, zone) {
-              this.date = time;
-              this.year = this.date.getFullYear();
-              this.month = this.date.getMonth() + 1;
-              this.day = this.date.getDate();
-              this.hour = this.date.getHours();
-              this.minute = this.date.getMinutes();
-              this.second = this.date.getSeconds();
+            toMoment: function () {
+              return moment.tz(this.year.toString() + this.normalize(this.month) + this.normalize(this.day) + ' ' + this.normalize(this.hour) + this.normalize(this.minute) + this.normalize(this.second), 'YYYYMMDD hhmmss', this.zone);
             },
-            fromBeats_aungbq$: function (beats, zone) {
-              var tmp$0, tmp$1;
-              var seconds = (tmp$1 = (tmp$0 = Kotlin.safeParseDouble(beats)) != null ? tmp$0 / 0.011574 : null) != null ? tmp$1 : Kotlin.throwNPE();
-              var time = new _.com.ppolivka.time.Time(new Date(), zone);
-              time.hour = Math.floor(seconds / 3600);
-              time.minute = Math.floor((seconds - time.hour * 3600) / 60);
-              time.second = Math.floor(seconds % 60);
-              return time;
-            },
-            toUTC: function () {
-              var zoneName = this.zone.name();
-              var utc = (new moment()).tz(this.year.toString() + this.month + this.day + ' ' + this.hour + this.minute + this.second, 'yyyyMMdd hhmmss', zoneName).tz('UTC');
-              return new _.com.ppolivka.time.Time(utc.toDate(), this.zone);
+            convertZone_61zpoe$: function (timeZone) {
+              var converted = this.toMoment().tz(timeZone);
+              return _.com.ppolivka.time.Time_55wt5a$(undefined, converted, timeZone);
             },
             toBeats: function () {
-              var utc = this.toUTC();
-              var beats = (utc.second + utc.minute * 60 + (utc.hour + 1) * 3600) / 86.4;
-              return beats;
+              var utc = this.convertZone_61zpoe$('UTC');
+              var utcone = utc.addHour();
+              var beats = (utcone.second + utcone.minute * 60 + utcone.hour * 3600) / 86.4;
+              return Math.round(beats);
+            },
+            addHour: function () {
+              var tmp$0, tmp$1, tmp$2, tmp$3, tmp$4, tmp$5;
+              var newTime = _.com.ppolivka.time.Time_55wt5a$(undefined, this.toMoment(), this.zone);
+              if (this.hour === 23) {
+                tmp$0 = newTime, tmp$1 = tmp$0.day, tmp$2 = tmp$1, tmp$0.day = tmp$1 + 1, tmp$2;
+                newTime.hour = 0;
+              }
+               else {
+                tmp$3 = newTime, tmp$4 = tmp$3.hour, tmp$5 = tmp$4, tmp$3.hour = tmp$4 + 1, tmp$5;
+              }
+              return newTime;
+            },
+            removeHour: function () {
+              var tmp$0, tmp$1, tmp$2, tmp$3, tmp$4, tmp$5;
+              var newTime = _.com.ppolivka.time.Time_55wt5a$(undefined, this.toMoment(), this.zone);
+              if (this.hour === 0) {
+                tmp$0 = newTime, tmp$1 = tmp$0.day, tmp$2 = tmp$1, tmp$0.day = tmp$1 - 1, tmp$2;
+                newTime.hour = 23;
+              }
+               else {
+                tmp$3 = newTime, tmp$4 = tmp$3.hour, tmp$5 = tmp$4, tmp$3.hour = tmp$4 - 1, tmp$5;
+              }
+              return newTime;
+            },
+            normalize: function ($receiver) {
+              return ('0' + $receiver).substring(('0' + $receiver).length - 2, ('0' + $receiver).length);
+            }
+          }, /** @lends _.com.ppolivka.time.Time */ {
+            object_initializer$: function () {
+              return Kotlin.createObject(null, null, {
+                timeFromBeats: function (beats, timeZone) {
+                  var tmp$0, tmp$1;
+                  var seconds = (tmp$1 = (tmp$0 = Kotlin.safeParseDouble(beats)) != null ? tmp$0 / 0.011574 : null) != null ? tmp$1 : Kotlin.throwNPE();
+                  var time = _.com.ppolivka.time.Time_cxhy00$(undefined, new Date(), 'UTC');
+                  time.hour = Math.floor(seconds / 3600);
+                  time.minute = Math.floor((seconds - time.hour * 3600) / 60);
+                  time.second = Math.floor(seconds % 60);
+                  var utcone = time.removeHour();
+                  var timeZoned = utcone.convertZone_61zpoe$(timeZone);
+                  return timeZoned;
+                }
+              });
             }
           }),
+          Time_55wt5a$: function ($this, moment, timeZone) {
+            $this = $this || Object.create(_.com.ppolivka.time.Time.prototype);
+            _.com.ppolivka.time.Time.call($this);
+            $this.year = moment.year();
+            $this.month = moment.month() + 1;
+            $this.day = moment.day();
+            $this.hour = moment.hour();
+            $this.minute = moment.minute();
+            $this.second = moment.second();
+            $this.zone = timeZone;
+            return $this;
+          },
+          Time_cxhy00$: function ($this, date, timeZone) {
+            $this = $this || Object.create(_.com.ppolivka.time.Time.prototype);
+            _.com.ppolivka.time.Time.call($this);
+            $this.year = date.getFullYear();
+            $this.month = date.getMonth() + 1;
+            $this.day = date.getDate();
+            $this.hour = date.getHours();
+            $this.minute = date.getMinutes();
+            $this.second = date.getSeconds();
+            $this.zone = timeZone;
+            return $this;
+          },
           TimeZone: Kotlin.createClass(null, function () {
             this.zones = new Kotlin.DefaultPrimitiveHashMap();
             Kotlin.modules['stdlib'].kotlin.plus_6099rs$(this.zones, new Kotlin.modules['stdlib'].kotlin.Pair('Etc/GMT+12', -720));
@@ -151,7 +233,7 @@
     })
   });
   Kotlin.defineModule('InternetTimeConverter', _);
-  _.main([]);
+  _.com.ppolivka.main([]);
 }(Kotlin));
 
 //@ sourceMappingURL=InternetTimeConverter.js.map

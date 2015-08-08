@@ -2,12 +2,12 @@ package com.ppolivka.time
 
 public native object  jstz {
 
-    fun determine() : zone = noImpl
+    fun determine() : Zone = noImpl
 
 }
 
 native
-public class zone {
+public class Zone {
 
     fun name() : String
 
