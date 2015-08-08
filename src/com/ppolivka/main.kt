@@ -18,12 +18,14 @@ fun main(args: Array<String>) {
     Field.second.change(::timeChange)
 }
 
+@suppress("UNUSED_PARAMETER")
 fun beatsChange(event : Event) {
     var beats : String = Field.beats.value() ?: "0"
     dateTime = Time.Companion.timeFromBeats(beats, zone)
     render()
 }
 
+@suppress("UNUSED_PARAMETER")
 fun timeChange(event : Event) {
     dateTime.hour = Field.hour.intValue()
     dateTime.minute = Field.minute.intValue()
