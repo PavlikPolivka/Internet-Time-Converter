@@ -3,16 +3,38 @@
 <html>
 <head>
     <title>Internet Time Converter</title>
+    <link rel="stylesheet" href="css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="css/custom.css" />
 
 </head>
 <body>
-
-    <div id="test">
-
+<div class="row">
+    <div class="col-md-2">
+        <input type="text" class="input-sm" id="hour">
     </div>
+    <div class="col-md-2">
+        <input type="text" class="input-sm" id="minute">
+    </div>
+    <div class="col-md-2">
+        <input type="text" class="input-sm" id="second">
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-6">
+        <input type="text" class="input-sm" id="beats">
+    </div>
+</div>
 
-    <script src="lib/kotlin.js"></script>
-    <script src="InternetTimeConverter.js"></script>
+
+<div id="test">
+
+</div>
+
+<script src="lib/kotlin.js"></script>
+<script src="lib/jstz-1.0.4.min.js"></script>
+<script src="lib/moment.js"></script>
+<script src="lib/moment-timezone.js"></script>
+<script src="InternetTimeConverter.js"></script>
 
 </body>
 </html>
