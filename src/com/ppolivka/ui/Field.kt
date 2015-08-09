@@ -13,7 +13,10 @@ public enum class Field(e : Element?, v : Validator) {
     minute(document.getElementById("minute"), IntValidator(59)),
     second(document.getElementById("second"), IntValidator(59)),
     beats(document.getElementById("beats"), IntValidator(999)),
-    test(document.getElementById("test"), StringValidator());
+    zonePane(document.getElementById("zonePane"), StringValidator()),
+    zones(document.getElementById("zones"), StringValidator()),
+    resetZone(document.getElementById("resetZone"), StringValidator()),
+    settingsButton(document.getElementById("showSettings"), StringValidator());
 
     var element : Element? = e
     var validator : Validator = v
@@ -27,12 +30,32 @@ public enum class Field(e : Element?, v : Validator) {
         element?.value = validator.validate(v)
     }
 
+    fun title(v : String) {
+        element?.setAttribute("title", v)
+    }
+
     fun intValue() : Int {
         return parseInt(value() ?: "0")
     }
 
-    fun change(callback: ((Event) -> Unit)?) {
+    fun addClass(clazz : String) {
+        element?.classList?.add(clazz)
+    }
+
+    fun removeClass(clazz : String) {
+        element?.classList?.remove(clazz)
+    }
+
+    fun keyup(callback: ((Event) -> Unit)?) {
         element?.addEventListener("keyup", callback)
+    }
+
+    fun change(callback: ((Event) -> Unit)?) {
+        element?.addEventListener("change", callback)
+    }
+
+    fun click(callback: ((Event) -> Unit)?) {
+        element?.addEventListener("click", callback)
     }
 
 }

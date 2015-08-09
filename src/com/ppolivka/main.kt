@@ -1,27 +1,39 @@
 package com.ppolivka
 
-import com.ppolivka.ui.Field
-import com.ppolivka.time.Date
+import com.ppolivka.native.Date
+import com.ppolivka.native.jstz
+import com.ppolivka.storage.ZoneDao
 import com.ppolivka.time.Time
-import com.ppolivka.time.jstz
+import com.ppolivka.ui.Field
 import org.w3c.dom.events.Event
-import com.ppolivka.render
 
-var zone : String = jstz.determine().name()
-var dateTime: Time = Time(Date(), zone)
+var dateTime: Time = Time(Date(), "UTC");
+var paneHidden : Boolean = true
 
 fun main(args: Array<String>) {
+
+    ZoneDao.checkAndInitZone() //Sets default zone if none exists
+    dateTime = Time(Date(), ZoneDao.getZone())
+
+    Field.zones.value(ZoneDao.getZone())
+    Field.settingsButton.title(ZoneDao.getZone())
+
     render()
-    Field.beats.change(::beatsChange)
-    Field.hour.change(::timeChange)
-    Field.minute.change(::timeChange)
-    Field.second.change(::timeChange)
+
+    Field.beats.keyup(::beatsChange)
+    Field.hour.keyup(::timeChange)
+    Field.minute.keyup(::timeChange)
+    Field.second.keyup(::timeChange)
+
+    Field.settingsButton.click(::showHideInfo)
+    Field.zones.change(::zoneChange)
+    Field.resetZone.click(::resetZone)
 }
 
 @suppress("UNUSED_PARAMETER")
 fun beatsChange(event : Event) {
     var beats : String = Field.beats.value() ?: "0"
-    dateTime = Time.Companion.timeFromBeats(beats, zone)
+    dateTime = Time.Companion.timeFromBeats(beats, ZoneDao.getZone())
     render()
 }
 
@@ -32,6 +44,38 @@ fun timeChange(event : Event) {
         dateTime.minute = Field.minute.intValue()
         dateTime.second = Field.second.intValue()
         render()
+    }
+}
+
+@suppress("UNUSED_PARAMETER")
+fun zoneChange(event : Event) {
+    val zone : String = Field.zones.value() ?: "UTC"
+    ZoneDao.saveZone(zone)
+    Field.settingsButton.title(zone)
+    dateTime = dateTime.convertZone(zone)
+    render()
+}
+
+@suppress("UNUSED_PARAMETER")
+fun resetZone(event : Event) {
+    val zone : String = jstz.determine().name()
+    ZoneDao.saveZone(zone)
+    Field.zones.value(zone)
+    Field.settingsButton.title(zone)
+    dateTime = dateTime.convertZone(zone)
+    render()
+}
+
+@suppress("UNUSED_PARAMETER")
+fun showHideInfo(event : Event) {
+    if(paneHidden) {
+        Field.zonePane.removeClass("hide")
+        Field.zonePane.addClass("show")
+        paneHidden = false
+    } else {
+        Field.zonePane.removeClass("show")
+        Field.zonePane.addClass("hide")
+        paneHidden = true
     }
 }
 

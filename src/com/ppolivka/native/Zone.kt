@@ -1,4 +1,4 @@
-package com.ppolivka.time
+package com.ppolivka.native
 
 native
 public class Zone {

@@ -1,6 +1,7 @@
 package com.ppolivka.time
 
-import kotlin.platform.platformStatic
+import com.ppolivka.native.Date
+import com.ppolivka.native.Moment
 
 public class Time {
 
