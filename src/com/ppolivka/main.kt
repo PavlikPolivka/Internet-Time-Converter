@@ -1,6 +1,6 @@
 package com.ppolivka
 
-import com.ppolivka.browser.Field
+import com.ppolivka.ui.Field
 import com.ppolivka.time.Date
 import com.ppolivka.time.Time
 import com.ppolivka.time.jstz
@@ -27,10 +27,12 @@ fun beatsChange(event : Event) {
 
 @suppress("UNUSED_PARAMETER")
 fun timeChange(event : Event) {
-    dateTime.hour = Field.hour.intValue()
-    dateTime.minute = Field.minute.intValue()
-    dateTime.second = Field.second.intValue()
-    render()
+    if(Field.hour.value() != "" && Field.minute.value() != "" && Field.second.value() != "") {
+        dateTime.hour = Field.hour.intValue()
+        dateTime.minute = Field.minute.intValue()
+        dateTime.second = Field.second.intValue()
+        render()
+    }
 }
 
 fun render() {
