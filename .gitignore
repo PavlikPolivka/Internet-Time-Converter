@@ -1,3 +1,5 @@
 # Created by .ignore support plugin (hsz.mobi)
 .idea
 InternetTimeConverter.iml
+out/production/InternetTimeConverter.crx
+out/production/InternetTimeConverter.pem
