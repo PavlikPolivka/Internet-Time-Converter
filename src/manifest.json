@@ -2,7 +2,7 @@
   "manifest_version": 2,
   "name": "Internet Time Converter",
   "description": "This extension handles conversions between Swatch Internet Time and your time",
-  "version": "1.0",
+  "version": "1.1",
   "icons": {
     "16": "icon/icon16.png",
     "48": "icon/icon48.png",
